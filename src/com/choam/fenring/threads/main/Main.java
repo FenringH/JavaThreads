@@ -18,6 +18,7 @@ public class Main {
         ExerciseInterruptedSleep exerciseInterruptedSleep = new ExerciseInterruptedSleep(100, 2000);
         ExercisePie exercisePie = new ExercisePie(500);
         ExerciseGate exerciseGate = new ExerciseGate(2000, 2500, 6);
+        ExerciseTimer exerciseTimer = new ExerciseTimer();
 
 //        demoStart.play();
 //        demoInterrupt.play();
@@ -29,8 +30,9 @@ public class Main {
 
 //        exerciseInterruptedSleep.play();
 //        exercisePie.multiPlay();
-        exercisePie.megaPlay(20);
+//        exercisePie.megaPlay(20);
 //        exerciseGate.play();
+        exerciseTimer.play();
 
     }
 
