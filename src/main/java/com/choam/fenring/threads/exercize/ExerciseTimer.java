@@ -3,11 +3,19 @@ package com.choam.fenring.threads.exercize;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static java.lang.Math.round;
+
 public class ExerciseTimer {
 
     private final static int FORWARD = 1;
     private final static int BACKWARD = -1;
     private final static int MAX_DISTANCE = 20;
+    private final static int DEFAULT_FPS = 10;
+
+    private final int maxDistance;
+    private final int fps;
+
+    private Timer timer;
 
     private class ThreadLocalDirection<T> extends ThreadLocal<Integer> {
         @Override
@@ -27,8 +35,16 @@ public class ExerciseTimer {
     private volatile ThreadLocalPosition<Integer> position;
 
     public ExerciseTimer() {
+        this(MAX_DISTANCE, DEFAULT_FPS);
+    }
+
+    public ExerciseTimer(int maxDistance, int fps) {
+
         direction = new ThreadLocalDirection<>();
         position = new ThreadLocalPosition<>();
+
+        this.maxDistance = maxDistance;
+        this.fps = fps;
     }
 
     public void play() {
@@ -42,15 +58,13 @@ public class ExerciseTimer {
 
                 StringBuilder stringBuilder = new StringBuilder();
 
-                for (int i = 0; i < MAX_DISTANCE; i++) {
-                    stringBuilder.append("\b");
+                if (direction.get().equals(FORWARD)) {
+                    System.out.print("\b ");
+                } else {
+                    System.out.print("\b \b\b");
                 }
 
-                for (int i = 0; i < position.get(); i++) {
-                    stringBuilder.append(' ');
-                }
-
-                stringBuilder.append('*');
+                System.out.print('*');
 
                 System.out.print(stringBuilder.toString());
 
@@ -61,15 +75,43 @@ public class ExerciseTimer {
                     direction.set(FORWARD);
                 }
 
-                if (position.get() > MAX_DISTANCE) {
-                    position.set(MAX_DISTANCE);
+                if (position.get() >= maxDistance) {
+                    position.set(maxDistance);
                     direction.set(BACKWARD);
                 }
             }
         };
 
-        Timer timer = new Timer();
-        timer.schedule(timerTask, 0, 100);
+        int period = round(1000 / fps);
+
+        timer = new Timer();
+        timer.schedule(timerTask, 0, period);
+    }
+
+    public void stop() {
+        carriageReturn();
+        timer.cancel();
+    }
+
+    private void clearLine() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < maxDistance; i++) {
+            stringBuilder.append(' ');
+        }
+
+        System.out.print(stringBuilder.toString());
+    }
+
+    private void carriageReturn() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i <= maxDistance; i++) {
+            stringBuilder.append("\b");
+        }
+
+        System.out.print(stringBuilder.toString());
     }
 
 }

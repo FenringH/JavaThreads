@@ -1,6 +1,9 @@
 package com.choam.fenring.threads.util;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Util {
@@ -14,6 +17,21 @@ public class Util {
                 (thread.isAlive() ? "" : "not "),
                 thread.getState()
         );
+    }
+
+    public static String getThreadInfo(Thread thread) {
+        return thread.getName()
+                + "is "
+                + (thread.isAlive() ? " " : "not ")
+                + "alive and in state "
+                + thread.getState()
+                ;
+    }
+
+    public static String getTimedThreadInfo(Thread thread, String message) {
+        return System.currentTimeMillis()
+                + ": " + Thread.currentThread()
+                + ": " + message;
     }
 
     public static BigDecimal computePie(int digits) {
@@ -150,6 +168,45 @@ public class Util {
         }
 
         return orderedNumber;
+    }
+
+    public static BigDecimal factorial(int n) {
+
+        BigDecimal result;
+
+        if (n <= 0) { return BigDecimal.ONE; }
+
+        result = BigDecimal.ONE;
+
+        for (int i = n; i > 0; i--) {
+            result = result.multiply(BigDecimal.valueOf(i));
+        }
+
+        return result;
+    }
+
+    public static BigDecimal getEulerNumber(int precision, int maxIter) {
+
+        MathContext mathContext = new MathContext(precision, RoundingMode.HALF_UP);
+
+        BigDecimal result = BigDecimal.ZERO;
+
+        for (int i = 0; i < maxIter; i++) {
+            BigDecimal factorial = factorial(i);
+            BigDecimal inverseFactorial = BigDecimal.ONE.divide(factorial, mathContext);
+            result = result.add(inverseFactorial);
+        }
+
+        return result;
+    }
+
+    public static void printFloatMatrix(float[][] matrix) {
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[0].length; col++) {
+                System.out.printf("%02d\t", (int) matrix[row][col]);
+            }
+            System.out.println();
+        }
     }
 
     public static void outputException(Exception e) {

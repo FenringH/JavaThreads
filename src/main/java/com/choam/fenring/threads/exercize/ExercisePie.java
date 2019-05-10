@@ -20,7 +20,7 @@ public class ExercisePie {
         this.digits = digits;
 
         int processors = Runtime.getRuntime().availableProcessors();
-        System.out.println("Processors = " + processors);
+//        System.out.println("Processors = " + processors);
 
         this.maxThreads = processors;
     }
